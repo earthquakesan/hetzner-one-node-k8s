@@ -8,7 +8,9 @@ This will create .env file in the root of the repository for service principal c
 ```
 make bootstrap
 export USE_DOT_ENV=true
+export TF_VAR_hcloud_token=token
 make tf-init
+make tf-plan
 ```
 
 ## Service Principal: Rotate Credentials

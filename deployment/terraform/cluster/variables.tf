@@ -4,10 +4,17 @@ variable "hcloud_token" {
   sensitive = true # Requires terraform >= 0.14
 }
 
-variable "server" {
+variable "server_defaults" {
   type = object({
-    name = string
     image = string
     server_type = string
   })
+}
+
+variable "server_name" {
+  type = string
+}
+
+variable "ssh_keys" {
+  type = list(string)  
 }

@@ -6,7 +6,7 @@ parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 source $parent_path/variables.sh
 
 echo "this script will create Azure storage account for terraform state"
-echo "in case if storage account already exist the script will simply exit"
+echo "in case if storage account already exist the script will rotate the service principal credentials"
 
 # Create resource group for the azure storage
 IS_GROUP_EXIST=$(az group exists -n ${RG_NAME})
@@ -38,7 +38,7 @@ else
 fi
 
 # Create service principal for access to the storage account
-STORAGE_ACCOUNT_ID=$(az storage account show -n k3shetznertfsa | jq .id -r)
+STORAGE_ACCOUNT_ID=$(az storage account show -n ${STORAGE_ACCOUNT_NAME} | jq .id -r)
 
 echo "Creating service principal for ${STORAGE_ACCOUNT_ID} resource with name ${SP_NAME} and role ${SP_ROLE}"
 SP_INFO=$(az ad sp create-for-rbac -n ${SP_NAME} --role ${SP_ROLE} --scopes ${STORAGE_ACCOUNT_ID})

@@ -4,16 +4,19 @@ endif
 
 include scripts/variables.sh
 
-TF_DIR := deployment/terraform
+TF_DIR := deployment/terraform/cluster
 TF_RUN=terraform -chdir=${TF_DIR}
 TF_PLAN_FILE=apply.tfplan
-TF_COMMON_ENV := ../environment/common.tfvars
+TF_COMMON_ENV := ../../environment/common.tfvars
 
 bootstrap:
 	./scripts/create-az-storage.sh
 
 clean:
 	./scripts/remove-az-storage.sh
+
+connect:
+	./scripts/connect.sh
 
 env:
 	echo "The current git branch: $(shell git rev-parse --abbrev-ref HEAD)"
@@ -39,16 +42,16 @@ tf-plan-show:
 tf-plan: tf-init
 	$(TF_RUN) plan \
 		-var-file=${TF_COMMON_ENV} \
-		-var-file=${TF_ENV} \
+		-var 'server_name=k3s-main' \
 		-out=${TF_PLAN_FILE}
 
-deploy: tf-plan
+tf-apply: tf-plan
 	$(TF_RUN) apply ${TF_PLAN_FILE}
 
 tf-destroy:
 	$(TF_RUN) plan -destroy \
 		-var-file=${TF_COMMON_ENV} \
-		-var-file=${TF_ENV} \
+		-var 'server_name=k3s-main' \
 		-out=${TF_PLAN_FILE}
 	$(TF_RUN) apply ${TF_PLAN_FILE}
 
