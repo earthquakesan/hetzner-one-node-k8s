@@ -18,6 +18,9 @@ clean:
 connect:
 	./scripts/connect.sh
 
+configure-local-env:
+	./scripts/configure-local-env.sh
+
 env:
 	echo "The current git branch: $(shell git rev-parse --abbrev-ref HEAD)"
 	echo "GIT_BRANCH is set to: ${GIT_BRANCH}"
